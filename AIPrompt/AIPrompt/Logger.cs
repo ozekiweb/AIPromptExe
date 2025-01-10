@@ -47,7 +47,7 @@ namespace AIPrompt
             sb.Append(" [DEBUG] ");
             sb.Append(error);
             Console.WriteLine(sb.ToString());
-        }
+        }      
 
         private static string GetTime()
         {
