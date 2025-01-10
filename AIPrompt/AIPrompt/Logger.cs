@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace AIPrompt
 {
@@ -30,9 +27,9 @@ namespace AIPrompt
             StringBuilder sb = new StringBuilder();
             sb.Append(GetTime());
             sb.Append(" [ERROR]: ");
-            sb.Append(error);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(sb.ToString());
+            Console.ForegroundColor = ConsoleColor.Red;     
+            Console.Write(sb.ToString());
+            PrintMessageWithPadding(error);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -45,9 +42,52 @@ namespace AIPrompt
             StringBuilder sb = new StringBuilder();
             sb.Append(GetTime());
             sb.Append(" [DEBUG] ");
-            sb.Append(error);
-            Console.WriteLine(sb.ToString());
-        }      
+            Console.Write(sb.ToString());
+            PrintMessageWithPadding(error);
+        }
+
+        private static void PrintMessageWithPadding(string message)
+        {
+            if(message == null)
+            {
+                return;
+            }
+            var splitted = message.Split(Environment.NewLine);
+            const string padding = "  ";
+            var width = Console.WindowWidth;
+            var list = new List<string>
+            {
+                splitted[0]
+            };
+            for (int i = 1; i < splitted.Length; i++)
+            {
+                if (splitted[i].Length > width)
+                {
+                    var split = splitted[i].Split(" ");
+                    var line = padding;
+                    foreach (var v in split)
+                    {
+                        if(v.Length + line.Length < width - padding.Length)
+                        {
+                            line += v + " ";
+                        }
+                        else
+                        {
+                            list.Add(line);
+                            line = padding;
+                            line += v;
+                        }
+                    }
+                }
+                else { list.Add(padding + splitted[i]); }
+                
+            }
+
+            foreach (var item in list)
+            {
+                Console.WriteLine(item);
+            }
+        }
 
         private static string GetTime()
         {
