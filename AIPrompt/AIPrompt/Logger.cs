@@ -28,7 +28,7 @@ namespace AIPrompt
         public static void Error(string error)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(GetTimestamp());
+            sb.Append(GetTime());
             sb.Append(" [ERROR]: ");
             sb.Append(error);
             Console.ForegroundColor = ConsoleColor.Red;
@@ -43,16 +43,15 @@ namespace AIPrompt
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            sb.Append(GetTimestamp());
+            sb.Append(GetTime());
             sb.Append(" [DEBUG] ");
             sb.Append(error);
             Console.WriteLine(sb.ToString());
         }
 
-        private static string GetTimestamp()
+        private static string GetTime()
         {
-            var format = new DateTimeFormat("YYYY-MM-DD HH:mm:ss.ddd");
-            return DateTime.Now.ToString(); 
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); 
         }
     }
 }

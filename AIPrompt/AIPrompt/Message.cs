@@ -13,5 +13,16 @@ namespace AIPrompt
         public required string Role { get; set; }
         [JsonPropertyName("content")]
         public required string Content { get; set; }
+
+        public override string? ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Role: ")
+                .AppendLine(Role)
+                .Append("Content: ")
+                .AppendLine(Content);
+            var formatted = sb.ToString();
+            return formatted;
+        }
     }
 }

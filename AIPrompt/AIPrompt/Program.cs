@@ -1,5 +1,4 @@
 ﻿using AIPrompt;
-using Microsoft.Extensions.Logging;
 using System;
 using System.CommandLine;
 using System.CommandLine.Parsing;
@@ -49,6 +48,8 @@ namespace Ozeki
             var optVerbose = new Option<bool>("--verbose", () => false, "verbose mode");
             optVerbose.AddAlias("-v");
 
+            var optModel = new Option<bool>("--model", () => false, "specifies the model");
+
             var argPrompt = new Argument<string>("prompt", "the prompt to be sent to the HTTP AI API");
             if (standardInput != null)
             {
@@ -85,31 +86,59 @@ namespace Ozeki
 
             Logger.Debug("Creating Request Body");
             if(!TryCreateRequestContent(prompt, json, out var content)) return;
-            Logger.Debug("Request body done");           
+            Logger.Debug("Request body done");
+
+            Logger.Debug("Setting up request");
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = content;
+            request.Headers.Authorization = authorizationHeader;
 
             if (interactive)
             {
                 //Interactive mode
                 Logger.Debug("Switching to interactive mode");
+                if(authorizationHeader == null)
+                {
+                    return;
+                }
+                //InteractiveMode(request);
                 //Interactive mode logic
                 return;
             }
             
             //Normal execution
             Logger.Debug("Standard execution");
-            Logger.Debug("Setting up request");
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-            request.Content = content;
-            request.Headers.Authorization = authorizationHeader;
+
             try
             {
                 string response = await SendAPIRequest(request);
-                Console.WriteLine(response);
+                if (verbose) { 
+                    Console.WriteLine(response);
+                }
+                else
+                {
+                    var aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
+                    Console.WriteLine(aiResponse.Choices[0].Message.ToString());
+                }
             }
             catch (Exception e) { 
                 
                 Logger.Error(e.Message);
             }  
+        }
+
+        private async static void InteractiveMode(HttpRequestMessage initiationRequest, AIRequest aIRequest)
+        {
+            try
+            {
+                string initiationResponse = await SendAPIRequest(initiationRequest);
+                var airesponse = JsonSerializer.Deserialize<AIResponse>(initiationResponse, AIResponseJsonContext.Default.AIResponse);
+            }
+            catch (Exception e)
+            {
+
+                Logger.Error(e.Message);
+            }
         }
 
         private static bool TryCreateRequestContent(string rawContent, bool isJsonFormat, out StringContent? content)
@@ -120,10 +149,10 @@ namespace Ozeki
                 if (isJsonFormat)
                 {
                     //Parse prompt as JSON                   
-                    Logger.Debug("Deserializing JSON to Request");
+                    Logger.Debug("Checking if JSON is valid");
                     Logger.Debug(rawContent);
-                    //body = JsonSerializer.Deserialize<AIRequest>(prompt, AIRequestJsonContext.Default.AIRequest);
-                    Logger.Debug("Deserializing JSON to Request done");
+                    JsonDocument.Parse(rawContent);
+                    Logger.Debug("JSON is valid.");
                     jsonString = rawContent;
                 }
                 else
@@ -160,7 +189,7 @@ namespace Ozeki
                 Logger.Debug("Using Basic Authorisation Header");
                 var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(username + ":" + password);
                 var base64Encoded = Convert.ToBase64String(plainTextBytes);
-                authorization = new AuthenticationHeaderValue("Basic", apikey);
+                authorization = new AuthenticationHeaderValue("Basic", base64Encoded);
             }
             else
             {
@@ -197,7 +226,6 @@ namespace Ozeki
             using (var client = new HttpClient())
             {
                 Logger.Debug("Sending request");
-                Logger.Debug(request.Content.ToString());
                 Logger.Debug(await request.Content.ReadAsStringAsync());
                 var response = client.Send(request);
                 Logger.Debug("HTTP Request sent: " + response.RequestMessage);
@@ -205,8 +233,10 @@ namespace Ozeki
                 Logger.Debug(response.StatusCode.ToString());
                 var responseStream = await response.Content.ReadAsStreamAsync();
                 Logger.Debug("Response arrived");
+                var responseString = "";
                 using (var sr = new StreamReader(responseStream, Encoding.UTF8))
-                    return sr.ReadToEnd();
+                    responseString = sr.ReadToEnd();
+                return responseString;
             }
         }
     }
