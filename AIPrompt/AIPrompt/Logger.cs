@@ -13,6 +13,18 @@ namespace AIPrompt
 
         public static LogLevel logLevel = LogLevel.Debug;
 
+        public static void setVerbosity(bool verbose)
+        {
+            if (verbose)
+            {
+                logLevel = LogLevel.Debug;
+            }
+            else
+            {
+                logLevel = LogLevel.Error;
+            }
+        }
+
         public static void Error(string error)
         {
             StringBuilder sb = new StringBuilder();
