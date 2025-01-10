@@ -101,7 +101,7 @@ namespace Ozeki
                 {
                     return;
                 }
-                //InteractiveMode(request);
+                InteractiveMode(request);
                 //Interactive mode logic
                 return;
             }
@@ -127,16 +127,50 @@ namespace Ozeki
             }  
         }
 
-        private async static void InteractiveMode(HttpRequestMessage initiationRequest, AIRequest aIRequest)
+        private async static void InteractiveMode(HttpRequestMessage request)
         {
             try
             {
-                string initiationResponse = await SendAPIRequest(initiationRequest);
-                var airesponse = JsonSerializer.Deserialize<AIResponse>(initiationResponse, AIResponseJsonContext.Default.AIResponse);
+                Logger.Debug("Setting up initial chat");
+                string initiationResponse = await SendAPIRequest(request);
+                var initialAiResponse = JsonSerializer.Deserialize<AIResponse>(initiationResponse, AIResponseJsonContext.Default.AIResponse);
+                var responseJson = await request.Content.ReadAsStringAsync();
+                Logger.Debug(responseJson);
+                var aiRequest = JsonSerializer.Deserialize<AIRequest>(responseJson, AIRequestJsonContext.Default.AIRequest);
+                
+                aiRequest.Messages.Add(initialAiResponse.Choices[0].Message);
+
+                aiRequest.Messages.ForEach(message => { Console.WriteLine(message); });
+
+                while (true)
+                {
+                    Console.Write("Enter prompt: ");
+                    var prompt = Console.ReadLine();
+                    Logger.Debug("Prompt written");
+                    if (prompt == null)
+                    {
+                        continue;
+                    }
+
+                    if (prompt == "exit")
+                    {
+                        break;
+                    }
+
+                    var message = new Message() { Content = prompt, Role = "user" };
+                    aiRequest.Messages.Add(message);
+
+                    var json = JsonSerializer.Serialize(aiRequest, AIRequestJsonContext.Default.AIRequest);
+                    request.Content = new StringContent(json, Encoding.ASCII, "application/json");
+                    string response = await SendAPIRequest(request);
+                    var aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
+                    var answer = aiResponse.Choices[0].Message;
+                    aiRequest.Messages.Add(answer);
+                    Console.WriteLine(answer.ToString());
+                }
             }
             catch (Exception e)
             {
-
                 Logger.Error(e.Message);
             }
         }
@@ -236,6 +270,7 @@ namespace Ozeki
                 var responseString = "";
                 using (var sr = new StreamReader(responseStream, Encoding.UTF8))
                     responseString = sr.ReadToEnd();
+                Logger.Debug("Response read");
                 return responseString;
             }
         }
