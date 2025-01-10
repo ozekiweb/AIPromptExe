@@ -18,6 +18,8 @@ namespace Ozeki
 
         public static readonly string? USE_JSON = TestAllLocation("OZEKI_AIPROMPT_USE_JSON");
 
+        public static readonly string? MODEL = TestAllLocation("OZEKI_AIPROMPT_MODEL");
+
         private static string? TestAllLocation(string variable)
         {
             return Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Process)

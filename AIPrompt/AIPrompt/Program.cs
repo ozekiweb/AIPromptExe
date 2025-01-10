@@ -16,7 +16,7 @@ namespace Ozeki
      * Password: none
      * APIKey: none
      * Use Json: false
-     * Interactive: false
+     * Model: AI
      */
 
     internal class Program
@@ -42,13 +42,12 @@ namespace Ozeki
             var optJson = new Option<bool>("--json", () => Boolean.TryParse(EnvironmentVariable.USE_JSON, out bool env) ? env : false, "specifies if JSON format is used");
             optJson.AddAlias("-j");
 
-            var optInteractive = new Option<bool>("--interactive", () => false, "specifies if interactive mode is active");
-            optJson.AddAlias("-i");
+            var optModel = new Option<string>("--model", () => EnvironmentVariable.MODEL ?? "AI", "specifies model name");
+            optJson.AddAlias("-m");
 
             var optVerbose = new Option<bool>("--verbose", () => false, "verbose mode");
             optVerbose.AddAlias("-v");
 
-            var optModel = new Option<bool>("--model", () => false, "specifies the model");
 
             var argPrompt = new Argument<string>("prompt", "the prompt to be sent to the HTTP AI API");
             if (standardInput != null)
@@ -63,16 +62,16 @@ namespace Ozeki
                 optPassword,
                 optAPIKey,
                 optJson,
-                optInteractive,
+                optModel,
                 optVerbose,
                 argPrompt,
             };
-            rootCommand.SetHandler(CommandHandler, optURL, optUsername, optPassword, optAPIKey, optJson, optInteractive, optVerbose, argPrompt);
+            rootCommand.SetHandler(CommandHandler, optURL, optUsername, optPassword, optAPIKey, optJson, optModel, optVerbose, argPrompt);
 
             return await rootCommand.InvokeAsync(args);
         }
 
-        private static async void CommandHandler(string rawUrl, string? username, string? password, string? apikey, bool json, bool interactive, bool verbose, string prompt)
+        private static async void CommandHandler(string rawUrl, string? username, string? password, string? apikey, bool json, string model, bool verbose, string prompt)
         {
             Logger.setVerbosity(verbose);
 
@@ -85,26 +84,13 @@ namespace Ozeki
             Logger.Debug("Creating Authorisation Header done!");
 
             Logger.Debug("Creating Request Body");
-            if(!TryCreateRequestContent(prompt, json, out var content)) return;
+            if(!TryCreateRequestContent(prompt,  json, model, out var content)) return;
             Logger.Debug("Request body done");
 
             Logger.Debug("Setting up request");
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = content;
-            request.Headers.Authorization = authorizationHeader;
-
-            if (interactive)
-            {
-                //Interactive mode
-                Logger.Debug("Switching to interactive mode");
-                if(authorizationHeader == null)
-                {
-                    return;
-                }
-                //InteractiveMode(request);
-                //Interactive mode logic
-                return;
-            }
+            request.Headers.Authorization = authorizationHeader;          
             
             //Normal execution
             Logger.Debug("Standard execution");
@@ -127,21 +113,7 @@ namespace Ozeki
             }  
         }
 
-        private async static void InteractiveMode(HttpRequestMessage initiationRequest, AIRequest aIRequest)
-        {
-            try
-            {
-                string initiationResponse = await SendAPIRequest(initiationRequest);
-                var airesponse = JsonSerializer.Deserialize<AIResponse>(initiationResponse, AIResponseJsonContext.Default.AIResponse);
-            }
-            catch (Exception e)
-            {
-
-                Logger.Error(e.Message);
-            }
-        }
-
-        private static bool TryCreateRequestContent(string rawContent, bool isJsonFormat, out StringContent? content)
+        private static bool TryCreateRequestContent(string rawContent, bool isJsonFormat, string model, out StringContent? content)
         {
             var jsonString = "";
             try
@@ -159,7 +131,7 @@ namespace Ozeki
                 {
                     Logger.Debug("Generating Request Body from prompt");
                     Message message = new Message() { Content = rawContent, Role = "user" };
-                    AIRequest aiRequest = new AIRequest() { Messages = new List<Message> { message }, Model = "AI" };
+                    AIRequest aiRequest = new AIRequest() { Messages = new List<Message> { message }, Model = model };
                     jsonString = JsonSerializer.Serialize<AIRequest>(aiRequest, AIRequestJsonContext.Default.AIRequest);
                     Logger.Debug("Generating done");
                 }
