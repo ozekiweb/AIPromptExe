@@ -1,6 +1,6 @@
 # AIPromptExe
 
-This tool makes it possible to send prompts from a command prompt using the Ozeki 10 HTTP API or OpenAI API.
+[AIPromptExe](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html) is a tool which makes it possible to run AI prompts on the command line, that are evaluated by HTTP AI APIs, such as Ozeki AI Server or Chat GPT.
 
 ## Table of Contents
 
@@ -17,25 +17,15 @@ This tool makes it possible to send prompts from a command prompt using the Ozek
 - Send prompts via command prompt.
 - Supports Ozeki 10 HTTP API and OpenAI API.
 - Configurable via command-line arguments and environment variables.
-- JSON format support and verbose mode available.
+- JSON format support and logging mode available.
 - Accepts input from standard I/O.
 
-## Authentication
-AIPromptExe supports two types of Authentication
-| Method | Compatible |
-|-|-|
-|Using API key |Ozeki and OpenAI|
-|Using HTTP user credentials| Ozeki|
-
-
 ## Installation
-
-Provide step-by-step instructions on how to set up your project locally.
 
 ### Option 1: Use the Precompiled Executable (Recommended)
 
 1. Download the precompiled executable from the [Ozeki Website](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html) or the [Releases](https://github.com/ozekiweb/AIPromptExe/releases) page on GitHub.
-2. Extract the downloaded file (if zipped).
+2. Extract the downloaded file.
 3. Run the executable directly:
 
 ```bash
@@ -62,28 +52,20 @@ cd repository
 dotnet build
 ```
 
-4. Run the project:
-
-```bash
-dotnet run
-```
-
 ## Usage
 
-To use the app, provide a prompt and optional configuration parameters.
+To use the app, provide a prompt and optional configuration parameters:.
 
-You can also pipe input from standard I/O:
+```bash
+AIPrompt [prompt] <options>
+```
+
+You can also pipe the prompt from standard I/O:
 
 ```bash
 echo "your prompt" | AIPrompt [options]
 ```
-
-Or interactively:
-
-```bash
-AIPrompt [options]
-# Type your prompt directly into the terminal
-```
+For more examples check out this [guide](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html).
 
 ## Arguments
 
@@ -92,21 +74,21 @@ The app supports the following command-line arguments:
 | Argument                     | Description                                     | Default Value                                   |
 |------------------------------|-------------------------------------------------|------------------------------------------------|
 | `<prompt>`                   | The prompt to be sent to the HTTP AI API.      | (none)                                         |
-| `-u, --url <url>`            | Specifies the URL of the server.               | `http://www1.ozeki.hu:9511/api?command=chatgpt`|
-| `-us, --username <username>` | Specifies the username.                        | (none)                                        |
-| `-p, --password <password>`  | Specifies the password.                        | (none)                                       |
-| `-a, --apikey <apikey>`      | Specifies the API key.                         | (none)                                         |
-| `-j, -m, --json`             | Specifies if the prompt is in JSON format      | `False`                                         |
-| `--model <model>`            | Specifies the model name.                      | `AI`                                           |
-| `-v, --verbose`              | Enables verbose mode.                          | `False`                                        |
+| `-h <url>`            | Specifies the URL of the server.               | `http://localhost:9511/api?command=chatgpt`|
+| `-u <username>` | Specifies the username.                        | (none)                                        |
+| `-p <password>`  | Specifies the password.                        | (none)                                       |
+| `-a <apikey>`      | Specifies the API key.                         | (none)                                         |
+| `-j`             | Specifies if the prompt is in JSON format      | `False`                                         |
+| `-m <model>`            | Specifies the model name.                      | `AI`                                           |
+| `-l`              | Enables verbose mode.                          | `False`                                        |
 | `--version`                  | Displays version information.                  | (none)                                         |
 | `-?, -h, --help`             | Displays help and usage information.           | (none)                                         |
 
 ## Environment Variables
 
-Specify the environment variables that can be used to configure your app. Environment variables are particularly useful when you need to set configurations that are consistent across multiple runs or systems. For instance, they allow sensitive information, such as API keys or passwords, to be stored securely without hardcoding them into the application or passing them as command-line arguments.
+Use environment variables to configure your the using the key-values specified below. Environment variables are particularly useful when you need to set configurations that are consistent across multiple runs or systems. For instance, they allow sensitive information, such as API keys or passwords, to be stored securely without hardcoding them into the application or passing them as command-line arguments. The app supports all Environment Variable Scope for Windows. If the same key is specified in multiple scopes, then order of evaluation is *Process, User, and Machine*
 
-| Name                         | Usage                                          | Accepted Values                                  |
+| Key                         | Usage                                          | Accepted Values                                  |
 |------------------------------|-----------------------------------------------|-------------------------------------------------|
 | `OZEKI_AIPROMPT_URL`         | Specifies the URL of the server               | Any valid URL                                    |
 | `OZEKI_AIPROMPT_USERNAME`    | Specifies the username for authentication     | Any valid username                               |
@@ -115,19 +97,28 @@ Specify the environment variables that can be used to configure your app. Enviro
 | `OZEKI_AIPROMPT_USE_JSON`    | Specifies if the prompt is in JSON format              | `True`, `False`                                  |
 | `OZEKI_AIPROMPT_MODEL`       | Specifies the model name                      | Any valid model name                             |
 
-The app supports the following scopes for environment variables:
 
-- **Process:** Variables set for the current process.
-- **User:** Variables set at the user level.
-- **Machine:** Variables set at the system level and accessible by all users.
+## Authentication
+AIPromptExe supports two types of Authentication
+| Method | Compatibility |
+|-|-|
+|Using API key |Ozeki and OpenAI|
+|Using HTTP user credentials| Ozeki|
+
+### Method 1: API Key
+
+If you want to connect to the OpenAI API, you can find your API keys from [here](https://platform.openai.com/api-keys)
+
+### Method 2: HTTP user credentials
+To create a HTTP user, open the Chat Gateway and click on the Add application or chatbot link, then install a new HTTP user.
+For more details, check out this [guide](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html)
 
 ## Contact
 
 For support or questions about the project, please contact:
 
-- **Name:** Your Name
-- **Email:** your.email@example.com
-- **GitHub Issues:** [Open an issue](https://github.com/username/repository/issues)
+- **GitHub Issues:** [Open an issue](https://github.com/ozekiweb/AIPromptExe/issues)
+- **Ozeki** [Contact us](http://in.ozeki.hu:86/p_4597-contact-us-to-get-ozeki-chat-server.html)
 
 ## License
 
