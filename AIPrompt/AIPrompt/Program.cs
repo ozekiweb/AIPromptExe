@@ -78,7 +78,34 @@ namespace Ozeki
                     ctx.HelpBuilder.CustomizeSymbol(optJson, firstColumnText: "-j ");
                     ctx.HelpBuilder.CustomizeSymbol(optModel, firstColumnText: "-m [model name]");
                     ctx.HelpBuilder.CustomizeSymbol(optVerbose, firstColumnText: "-l ");
+                .UseHelp("-?")
+                .UseHelp(ctx =>
+                {
+                    ctx.HelpBuilder.CustomizeLayout(_ => HelpBuilder.Default.GetLayout()
+                        .Prepend(_ => _.Output.WriteLine("OZEKI AI Prompt v1.0.0"))
+                        .Append(_ => _.Output.WriteLine("Examples:"))
+                        .Append(_ => _.Output.WriteLine("  Send basic prompt with HTTP User Authentication:"))
+                        .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9511/api?command=chatgpt -u username -p password -model AI -l"))
+                        .Append(_ => _.Output.WriteLine("  Send JSON prompt with API Key Authentication:"))
+                        .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""json_prompt"" -h http://localhost:9511/api?command=chatgpt -a api_key -model AI -jl"))
+                        .Append(_ => _.Output.WriteLine("\nFor more information visit:" + Environment.NewLine + "  https://ozeki.chat/p_8675-ai-prompt.html")));
+
+                    ctx.HelpBuilder.CustomizeSymbol(optURL, "-h <host url>", "specifies the URL of the server [default: http://localhost:9511/api?command=chatgpt]");
+                    ctx.HelpBuilder.CustomizeSymbol(optUsername, "-u <user name>", "specifies the username");
+                    ctx.HelpBuilder.CustomizeSymbol(optPassword, "-p <password>", "specifies the password");
+                    ctx.HelpBuilder.CustomizeSymbol(optAPIKey, "-a <API key>", "specifies the API key");
+                    ctx.HelpBuilder.CustomizeSymbol(optJson, "-j", "specifies if JSON format is used [default: false]");
+                    ctx.HelpBuilder.CustomizeSymbol(optModel, "-m <model name>", "specifies model name [default: AI]");
+                    ctx.HelpBuilder.CustomizeSymbol(optVerbose, "-l", "logging mode");
                 })
+                .UseEnvironmentVariableDirective()
+                .UseParseDirective()
+                .UseSuggestDirective()
+                .RegisterWithDotnetSuggest()
+                .UseTypoCorrections()
+                .UseParseErrorReporting()
+                .UseExceptionHandler()
+                .CancelOnProcessTermination()
                 .Build();
 
             return await parser.InvokeAsync(args);
