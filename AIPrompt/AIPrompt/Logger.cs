@@ -52,6 +52,9 @@ namespace AIPrompt
             {
                 return;
             }
+
+            
+
             var splitted = message.Split(Environment.NewLine);
             const string padding = "  ";
             var width = Console.WindowWidth;
@@ -61,26 +64,27 @@ namespace AIPrompt
             };
             for (int i = 1; i < splitted.Length; i++)
             {
-                if (splitted[i].Length > width)
+                if (splitted[i].Length < width)
                 {
-                    var split = splitted[i].Split(" ");
-                    var line = padding;
-                    foreach (var v in split)
+                    list.Add(padding + splitted[i]);
+                    continue;
+                }
+                var split = splitted[i].Split(" ");
+                var line = padding;
+                foreach (var v in split)
+                {
+                    if (v.Length + line.Length < width - padding.Length)
                     {
-                        if(v.Length + line.Length < width - padding.Length)
-                        {
-                            line += v + " ";
-                        }
-                        else
-                        {
-                            list.Add(line);
-                            line = padding;
-                            line += v;
-                        }
+                        line += v + " ";
+                    }
+                    else
+                    {
+                        list.Add(line);
+                        line = padding;
+                        line += v;
                     }
                 }
-                else { list.Add(padding + splitted[i]); }
-                
+
             }
 
             foreach (var item in list)
