@@ -6,9 +6,14 @@ using System.CommandLine.Help;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization;
 using System.Security.AccessControl;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
+using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 namespace Ozeki
 {
@@ -37,7 +42,7 @@ namespace Ozeki
             var optAPIKey = new Option<string?>("-a");
             var optJson = new Option<bool?>("-j");
             var optModel = new Option<string?>("-m");
-            var optVerbose = new Option<bool>("-l", () => false);
+            var optLogging = new Option<bool>("-l", () => false);
 
             var argPrompt = new Argument<string>("prompt", "the prompt to be sent to the HTTP AI API");
             if (standardInput != null)
@@ -53,10 +58,9 @@ namespace Ozeki
                 optAPIKey,
                 optJson,
                 optModel,
-                optVerbose,
+                optLogging,
                 argPrompt,
             };
-            //rootCommand.SetHandler(CommandHandler, optURL, optUsername, optPassword, optAPIKey, optJson, optModel, optVerbose, argPrompt);
             rootCommand.SetHandler(async context =>
             {
                 string url = context.ParseResult.GetValueForOption(optURL) ?? EnvironmentVariable.URL ?? "http://localhost:9511/api?command=chatgpt";
@@ -65,10 +69,10 @@ namespace Ozeki
                 string? apikey = context.ParseResult.GetValueForOption(optAPIKey) ?? EnvironmentVariable.APIKEY;
                 bool json = (context.ParseResult.GetValueForOption(optJson) ?? (Boolean.TryParse(EnvironmentVariable.USE_JSON, out bool b)) && b);
                 string model = context.ParseResult.GetValueForOption(optModel) ?? EnvironmentVariable.MODEL ?? "AI";
-                bool verbose = context.ParseResult.GetValueForOption(optVerbose);
+                bool logging = context.ParseResult.GetValueForOption(optLogging);
                 string prompt = context.ParseResult.GetValueForArgument(argPrompt);
 
-                Logger.setVerbosity(verbose);
+                Logger.setVerbosity(logging);
 
                 if (!(apikey != null || (username != null && password != null) && apikey == null))
                 {
@@ -76,7 +80,7 @@ namespace Ozeki
                     return;
                 }
 
-                await CommandHandler(url, username, password, apikey, json, model, verbose, prompt);
+                await CommandHandler(url, username, password, apikey, json, model, logging, prompt);
             });
 
             var parser = new CommandLineBuilder(rootCommand)
@@ -98,9 +102,10 @@ namespace Ozeki
                     ctx.HelpBuilder.CustomizeSymbol(optAPIKey, "-a <API key>", "specifies the API key");
                     ctx.HelpBuilder.CustomizeSymbol(optJson, "-j", "specifies if JSON format is used [default: false]");
                     ctx.HelpBuilder.CustomizeSymbol(optModel, "-m <model name>", "specifies model name [default: AI]");
-                    ctx.HelpBuilder.CustomizeSymbol(optVerbose, "-l", "logging mode");
+                    ctx.HelpBuilder.CustomizeSymbol(optLogging, "-l", "logging mode");
                 })
                 .UseEnvironmentVariableDirective()
+                .UseVersionOption("-v")
                 .UseParseDirective()
                 .UseSuggestDirective()
                 .RegisterWithDotnetSuggest()
