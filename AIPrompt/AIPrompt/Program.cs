@@ -181,10 +181,19 @@ namespace Ozeki
                 {
                     //Parse prompt as JSON                   
                     Logger.Debug("Checking if JSON is valid");
+
+                    rawContent = rawContent.Trim().Trim('"', '\'');           
                     Logger.Debug(rawContent);
-                    JsonDocument.Parse(rawContent);
+                    var parsed = JsonNode.Parse(rawContent);
+                    
                     Logger.Debug("JSON is valid.");
-                    jsonString = rawContent;
+                    jsonString = parsed.ToJsonString(new JsonSerializerOptions()
+                    {
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
+                    jsonString = jsonString.Replace("\\\"", "\"");
+
+                    Logger.Debug(jsonString);
                 }
                 else
                 {
