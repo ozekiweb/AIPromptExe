@@ -78,6 +78,16 @@ For more examples check out this [guide](https://ozeki.chat/p_8675-ai-command-li
 
 ## Examples
 
+### Send basic prompt with HTTP User Authentication:
+```bash
+aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model AI -l
+```
+### Send JSON prompt with API Key Authentication using standard I/O:
+```bash
+echo "json_prompt" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -model AI -jl
+```
+                                          
+
 ## Arguments
 
 The app supports the following command-line arguments:
