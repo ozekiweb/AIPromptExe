@@ -84,7 +84,11 @@ aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u user
 ```
 ### Send JSON prompt with API Key Authentication using standard I/O:
 ```bash
-echo "json_prompt" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -model AI -jl
+echo "json_prompt" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
+```
+### Read JSON prompt from file with API Key Authentication using standard I/O:
+```bash
+type prompt.json | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
 ```
                                           
 
@@ -107,7 +111,7 @@ The app supports the following command-line arguments:
 
 ## Environment Variables
 
-Use environment variables to configure your the using the key-values specified below. Environment variables are particularly useful when you need to set configurations that are consistent across multiple runs or systems. For instance, they allow sensitive information, such as API keys or passwords, to be stored securely without hardcoding them into the application or passing them as command-line arguments. The app supports all Environment Variable Scope for Windows. If the same key is specified in multiple scopes, then order of evaluation is *Process, User, and Machine*
+Use environment variables to configure your preferences using the key-values specified below. Environment variables are particularly useful when you need to set configurations that are consistent across multiple runs or systems. For instance, they allow sensitive information, such as API keys or passwords, to be stored securely without hardcoding them into the application or passing them as command-line arguments. The app supports all Environment Variable Scope for Windows. If the same key is specified in multiple scopes, then order of evaluation is *Process, User, and Machine*.
 
 | Key                         | Usage                                          | Accepted Values                                  |
 |------------------------------|-----------------------------------------------|-------------------------------------------------|
