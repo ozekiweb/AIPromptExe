@@ -139,9 +139,10 @@ namespace Ozeki
             //Normal execution
             Logger.Debug("Standard execution");
 
+            string response = "";
             try
             {
-                string response = await SendAPIRequest(request);
+                response = await SendAPIRequest(request);
                 if (verbose)
                 {
                     Logger.Debug(response);
@@ -164,6 +165,11 @@ namespace Ozeki
             {
                 Logger.Error("An error happened while sending request.");
                 Logger.Error(e.Message);
+            }
+            catch (JsonException)
+            {
+                Logger.Error("Unexpected response from server:");
+                Logger.Error(response);
             }
             catch (Exception e)
             {
@@ -278,7 +284,7 @@ namespace Ozeki
             Logger.Debug(await request.Content.ReadAsStringAsync());
             var response = client.Send(request);
             Logger.Debug("HTTP Request sent: " + response.RequestMessage);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
             Logger.Debug(response.StatusCode.ToString());
             var responseStream = await response.Content.ReadAsStreamAsync();
             Logger.Debug("Response arrived");
