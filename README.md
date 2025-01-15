@@ -1,4 +1,4 @@
-![Ozeki AI Server Logo](/Resources/ozeki-ai-server.webp)
+![Ozeki AI Server Logo](/Resources/ozeki-ai-server.png)
 # OZEKI AI Prompt 
 
 [OZEKI AI Prompt](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html) is a tool which makes it possible to run AI prompts on the command line, that are evaluated by HTTP AI APIs, such as Ozeki AI Server or Chat GPT.
@@ -9,6 +9,7 @@
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Examples](#examples)
 - [Arguments](#arguments)
 - [Environment Variables](#environment-variables)
 - [Contact](#contact)
@@ -74,6 +75,8 @@ You can also pipe the prompt from standard I/O:
 echo "your prompt" | AIPrompt [options]
 ```
 For more examples check out this [guide](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html).
+
+## Examples
 
 ## Arguments
 
