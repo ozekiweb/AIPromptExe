@@ -26,10 +26,11 @@
 - Prompt Sending: Allows users to send prompts directly to HTTP AI APIs from the command line.
 - Dual API Support: Supports Ozeki 10 HTTP API and OpenAI API.
 - Configurable: Easy to set your preferences via command-line arguments and environment variables.
-- JSON Support
-- Input from Standard I/O.
+- Flexible: Read prompts from Standard I/O, send a simple prompt or customize your request using JSON
 - Logging Mode: Provides detailed logging to facilitate debugging and monitoring.
+- Interactive Mode: Chat with an LLM by sending multiple prompts through HTTP
 - Fast deployment: Ready to use, self-contained executable file is available to download. 
+- Open Source: This tool is fully open sourced, enabling users to build, inspect, and modify the source code according to their needs
 
 ## Installation
 
@@ -91,6 +92,11 @@ echo "json_prompt" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -
 ### Read JSON prompt from file with API Key Authentication using standard I/O:
 ```bash
 type prompt.json | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
+```
+
+### Chat with an AI Model by using Interactive Mode and HTTP User Authentication:
+```bash
+aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model AI -i
 ```
                                           
 
