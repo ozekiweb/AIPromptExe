@@ -45,10 +45,6 @@ namespace Ozeki
             var optLogging = new Option<bool>("-l", () => false);
 
             var argPrompt = new Argument<string>("prompt", "the prompt to be sent to the HTTP AI API");
-            if (standardInput != null)
-            {
-                argPrompt.SetDefaultValue(standardInput);
-            }
 
             var rootCommand = new RootCommand("This tool makes it possible to run AI prompts on the command line, that are evaluated by HTTP AI APIs, such as Ozeki AI Server or Chat GPT.")
             {
@@ -78,6 +74,26 @@ namespace Ozeki
                 {
                     Logger.Error("No credentials specified");
                     return;
+                }
+
+                if (json)
+                {
+                    if (prompt != null)
+                    {
+                        Logger.Error("JSON must be specified through Standard Input");
+                        return;
+                    }
+                }
+
+                if(prompt == null && standardInput == null)
+                {
+                    Logger.Error("Prompt is not specified");
+                    return;
+                }
+
+                if (prompt == null && standardInput != null)
+                {
+                    prompt = standardInput;
                 }
 
                 await CommandHandler(url, username, password, apikey, json, model, logging, prompt);
@@ -163,7 +179,7 @@ namespace Ozeki
             }
             catch (HttpRequestException e)
             {
-                Logger.Error("An error happened while sending request.");
+                Logger.Error("An error happened while sending request:");
                 Logger.Error(e.Message);
             }
             catch (JsonException)
@@ -173,6 +189,7 @@ namespace Ozeki
             }
             catch (Exception e)
             {
+                Logger.Error("Unexpected error happened:");
                 Logger.Error(e.Message);
             }
         }
@@ -220,6 +237,7 @@ namespace Ozeki
             }
             catch (Exception e)
             {
+                Logger.Error("Unexpected error happened:");
                 Logger.Error(e.ToString());
                 content = null;
                 return false;
@@ -266,7 +284,7 @@ namespace Ozeki
             Logger.Debug("Checking if URL fits HTTP or HTTPS scheme");
             if (!(url.Scheme == Uri.UriSchemeHttp || url.Scheme == Uri.UriSchemeHttps))
             {
-                Logger.Error("The scheme of specified url is not http or https.");
+                Logger.Error("The scheme of specified URL is not http or https.");
                 return false;
             }
             return true;
@@ -284,7 +302,7 @@ namespace Ozeki
             Logger.Debug(await request.Content.ReadAsStringAsync());
             var response = client.Send(request);
             Logger.Debug("HTTP Request sent: " + response.RequestMessage);
-            //response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
             Logger.Debug(response.StatusCode.ToString());
             var responseStream = await response.Content.ReadAsStreamAsync();
             Logger.Debug("Response arrived");
