@@ -90,7 +90,20 @@ namespace Ozeki
             Logger.Debug("Setting up request");
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = content;
-            request.Headers.Authorization = authorizationHeader;          
+            request.Headers.Authorization = authorizationHeader;
+
+            if (interactive)
+            {
+                //Interactive mode
+                Logger.Debug("Switching to interactive mode");
+                if(authorizationHeader == null)
+                {
+                    return;
+                }
+                InteractiveMode(request);
+                //Interactive mode logic
+                return;
+            }
             
             //Normal execution
             Logger.Debug("Standard execution");
@@ -113,7 +126,55 @@ namespace Ozeki
             }  
         }
 
-        private static bool TryCreateRequestContent(string rawContent, bool isJsonFormat, string model, out StringContent? content)
+        private async static void InteractiveMode(HttpRequestMessage request)
+        {
+            try
+            {
+                Logger.Debug("Setting up initial chat");
+                string initiationResponse = await SendAPIRequest(request);
+                var initialAiResponse = JsonSerializer.Deserialize<AIResponse>(initiationResponse, AIResponseJsonContext.Default.AIResponse);
+                var responseJson = await request.Content.ReadAsStringAsync();
+                Logger.Debug(responseJson);
+                var aiRequest = JsonSerializer.Deserialize<AIRequest>(responseJson, AIRequestJsonContext.Default.AIRequest);
+                
+                aiRequest.Messages.Add(initialAiResponse.Choices[0].Message);
+
+                aiRequest.Messages.ForEach(message => { Console.WriteLine(message); });
+
+                while (true)
+                {
+                    Console.Write("Enter prompt: ");
+                    var prompt = Console.ReadLine();
+                    Logger.Debug("Prompt written");
+                    if (prompt == null)
+                    {
+                        continue;
+                    }
+
+                    if (prompt == "exit")
+                    {
+                        break;
+                    }
+
+                    var message = new Message() { Content = prompt, Role = "user" };
+                    aiRequest.Messages.Add(message);
+
+                    var json = JsonSerializer.Serialize(aiRequest, AIRequestJsonContext.Default.AIRequest);
+                    request.Content = new StringContent(json, Encoding.ASCII, "application/json");
+                    string response = await SendAPIRequest(request);
+                    var aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
+                    var answer = aiResponse.Choices[0].Message;
+                    aiRequest.Messages.Add(answer);
+                    Console.WriteLine(answer.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+            }
+        }
+
+        private static bool TryCreateRequestContent(string rawContent, bool isJsonFormat, out StringContent? content)
         {
             var jsonString = "";
             try
@@ -208,6 +269,7 @@ namespace Ozeki
                 var responseString = "";
                 using (var sr = new StreamReader(responseStream, Encoding.UTF8))
                     responseString = sr.ReadToEnd();
+                Logger.Debug("Response read");
                 return responseString;
             }
         }
