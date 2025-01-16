@@ -23,11 +23,13 @@
 *HTTP API:* https://ozeki.chat/p_7097-ai-developer.html
 ## Features
 
-- Send prompts via command prompt.
-- Supports Ozeki 10 HTTP API and OpenAI API.
-- Configurable via command-line arguments and environment variables.
-- JSON format support and logging mode available.
-- Accepts input from standard I/O.
+- Prompt Sending: Allows users to send prompts directly to HTTP AI APIs from the command line.
+- Dual API Support: Supports Ozeki 10 HTTP API and OpenAI API.
+- Configurable: Easy to set your preferences via command-line arguments and environment variables.
+- JSON Support
+- Input from Standard I/O.
+- Logging Mode: Provides detailed logging to facilitate debugging and monitoring.
+- Fast deployment: Ready to use, self-contained executable file is available to download. 
 
 ## Installation
 
