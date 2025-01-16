@@ -30,6 +30,7 @@ namespace AIPrompt
             Console.ForegroundColor = ConsoleColor.Red;     
             Console.Write(sb.ToString());
             PrintMessageWithPadding(error);
+            Console.WriteLine("Use logging mode to find out more about this error.");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -97,5 +98,7 @@ namespace AIPrompt
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); 
         }
+
+        
     }
 }
