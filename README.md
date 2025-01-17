@@ -113,7 +113,8 @@ The app supports the following command-line arguments:
 | `-a <apikey>`      | Specifies the API key.                         | (none)                                         |
 | `-j`             | Specifies if the prompt is in JSON format      | `False`                                         |
 | `-m <model>`            | Specifies the model name.                      | `AI`                                           |
-| `-l`              | Enables verbose mode.                          | `False`                                        |
+| `-l`              | Enables logging mode.                          | `False`                                        |
+| `-i` | Enables interactive mode. | `False` |
 | `-v`                  | Displays version information.                  | (none)                                         |
 | `-?`             | Displays help and usage information.           | (none)                                         |
 
