@@ -26,6 +26,5 @@ namespace Ozeki
                 ?? Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.User)
                 ?? Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Machine);
         }
-
     }
 }

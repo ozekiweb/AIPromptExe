@@ -5,7 +5,9 @@ using System.CommandLine.Builder;
 using System.CommandLine.Help;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Reflection.Metadata;
 using System.Runtime.Serialization;
 using System.Security.AccessControl;
@@ -18,19 +20,8 @@ using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 namespace Ozeki
 {
-    /*
-     * Defaults if nothing is specified:
-     * URL: http://www1.ozeki.hu:9511/api?command=chatgpt
-     * username: none
-     * Password: none
-     * apikey: none
-     * Use Json: false
-     * Model: AI
-     */
-
     internal class Program
     {
-
         static async Task<int> Main(string[] args)
         {
             string? standardInput = Console.IsInputRedirected ? Console.In.ReadToEnd() : null;
@@ -40,7 +31,6 @@ namespace Ozeki
 
         private static async void CommandHandler(AIPromptArguments arguments)
         {
-
             Logger.Debug("Parsing URL");
             if (!TryCreateHTTPUrl(arguments.Url, out Uri url)) return;
             Logger.Debug("Checking done");
@@ -79,23 +69,6 @@ namespace Ozeki
             try
             {
                 response = await SendAPIRequest(request);
-                if (arguments.Logging)
-                {
-                    Logger.Debug(response);
-                }
-                else if (arguments.Json)
-                {
-                    Console.WriteLine(response);
-                }
-                else
-                {
-                    var aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
-                    if (aiResponse == null)
-                    {
-                        throw new NullReferenceException();
-                    }
-                    AIPromptConsole.PrintMessage(aiResponse.Choices[0].Message);
-                }
             }
             catch (HttpRequestException e)
             {
@@ -105,16 +78,36 @@ namespace Ozeki
                 {
                     Logger.Error(e.InnerException.Message);
                 }
-            }
-            catch (JsonException)
-            {
-                Logger.Error("Unexpected response from server:");
-                Logger.Error(response);
+                return;
             }
             catch (Exception e)
             {
                 Logger.Error("Unexpected error happened:");
                 Logger.Error(e.Message);
+                return;
+            }
+
+            if (arguments.Logging)
+            {
+                Logger.Debug(response);
+                return;
+            }
+            else if (arguments.Json)
+            {
+                Console.WriteLine(response);
+                return;
+            }
+
+            //Basic prompt
+            try
+            {
+                var aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
+                AIPromptConsole.PrintMessage(aiResponse.Choices[0].Message);
+            }
+            catch (JsonException)
+            {
+                Logger.Error("Unexpected response from server:");
+                Logger.Error(response);
             }
         }
 
@@ -130,12 +123,6 @@ namespace Ozeki
             {
                 var prompt = AIPromptConsole.Read("Enter your prompt:");
                 Console.WriteLine();
-                if (prompt == null)
-                {
-                    Logger.Debug("Prompt was empty");
-                    continue;
-                }
-
                 if (prompt == "exit")
                 {
                     Logger.Debug("Interactive mode exited");
@@ -145,10 +132,10 @@ namespace Ozeki
                 aiRequest.Messages.Add(message);
                 Logger.Debug(message.Content);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
-                request.Headers.Authorization = authenticationHeader;
+                var httprequest = new HttpRequestMessage(HttpMethod.Post, url);
+                httprequest.Headers.Authorization = authenticationHeader;
 
-                Message? answer = await GetAnswer(aiRequest, request);
+                Message? answer = await GetAnswer(aiRequest, httprequest);
                 if (answer == null) return;
                 aiRequest.Messages.Add(answer);
                 AIPromptConsole.PrintMessage(aiRequest.Messages.Last(), "Response:");
@@ -159,7 +146,6 @@ namespace Ozeki
         {
             try
             {
-              
                 var json = JsonSerializer.Serialize(aiRequest, AIRequestJsonContext.Default.AIRequest);
                 request.Content = new StringContent(json, Encoding.ASCII, "application/json");
                 Spinner spinner = new Spinner("Waiting for response:");
@@ -185,7 +171,6 @@ namespace Ozeki
                 Logger.Error(e.Message);
                 return null;
             }
-
         }
 
         private static async Task<AIRequest?> GetInitialResponse(HttpRequestMessage httpRequest)
@@ -225,7 +210,6 @@ namespace Ozeki
                 Logger.Error(e.Message);
                 return null;
             }
-
         }
 
         private static bool TryCreateRequestContent(string rawContent, bool isJsonFormat, string model, out StringContent? content)
@@ -236,17 +220,19 @@ namespace Ozeki
                 return true;
             }
             content = null;
-            return false;      
+            return false;
         }
 
         private static bool TryBuildBasicRequest(string rawContent, string model, out string jsonString)
         {
             Logger.Debug("Generating Request Body from prompt");
-            Message message = new Message() { Content = rawContent, Role = "user" };
-            AIRequest aiRequest = new AIRequest() { Messages = new List<Message> { message }, Model = model };
+            Message message1 = new() { Role = "assistant", Content = "You are an assistant." };
+            Message message2 = new() { Content = rawContent, Role = "user" };
+            AIRequest aiRequest = new AIRequest() { Messages = new List<Message> { message1, message2 }, Model = model };
             jsonString = JsonSerializer.Serialize<AIRequest>(aiRequest, AIRequestJsonContext.Default.AIRequest);
             Logger.Debug("Generating done");
-            return true;          
+            Logger.Debug(jsonString);
+            return true;
         }
 
         private static bool TryParseJson(string rawContent, out string jsonString)
@@ -267,8 +253,7 @@ namespace Ozeki
                 });
                 jsonString = jsonString.Replace("\\\"", "\"");
 
-                Logger.Debug(jsonString); 
-                return false;
+                return true;
             }
             catch (JsonException)
             {
@@ -305,7 +290,7 @@ namespace Ozeki
             else
             {
                 //Error
-                Logger.Error("Credentials not specified");
+                Logger.Error("Credentials not specified.");
                 authorization = null;
                 return false;
             }
@@ -333,21 +318,22 @@ namespace Ozeki
 
         private static async Task<string> SendAPIRequest(HttpRequestMessage request)
         {
+            var httpClientHandler = new HttpClientHandler();
+
             using var client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(240);
-            Logger.Debug("Loaded request:");
+            
             if (request.Content == null)
             {
                 throw new NullReferenceException();
             }
-            Logger.Debug(await request.Content.ReadAsStringAsync());
-
+            Logger.Debug("HTTP Request: " + request);
+            Logger.Debug("Content: " + await request.Content.ReadAsStringAsync());
+            Logger.Debug("Sending HTTP Request...");
             var response = client.Send(request);
             Logger.Debug("HTTP Request sent: " + response.RequestMessage);
-
-            Logger.Debug(response.StatusCode.ToString());
+            Logger.Debug("HTTP Response: " + (int)response.StatusCode + " " + response.StatusCode.ToString());
             var responseStream = await response.Content.ReadAsStreamAsync();
-            Logger.Debug("Response arrived");
             using var sr = new StreamReader(responseStream, Encoding.UTF8);
             var responseString = sr.ReadToEnd();
             return responseString;

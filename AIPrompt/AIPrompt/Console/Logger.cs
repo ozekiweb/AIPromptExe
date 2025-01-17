@@ -22,15 +22,17 @@ namespace AIPrompt
             }
         }
 
-        public static void Error(string error)
+        public static void Error(params string[] error)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(GetTime());
-            sb.Append(" [ERROR]: ");
-            Console.ForegroundColor = ConsoleColor.Red;     
-            Console.Write(sb.ToString());
-            PrintMessageWithPadding(error);
-            Console.WriteLine("Use logging mode to find out more about this error.");
+            foreach (string s in error)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(GetTime());
+                sb.Append(" [ERROR]: ");
+                Console.ForegroundColor = ConsoleColor.Red;     
+                Console.Write(sb.ToString());
+                PrintMessageWithPadding(s);
+            }
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -47,15 +49,14 @@ namespace AIPrompt
             PrintMessageWithPadding(error);
         }
 
+        //Enter padding at the beginning of each line
         private static void PrintMessageWithPadding(string message)
         {
-            if(message == null)
+            if (message == null)
             {
                 return;
             }
-
-            
-
+          
             var splitted = message.Split(Environment.NewLine);
             const string padding = "  ";
             var width = Console.WindowWidth;
@@ -85,7 +86,6 @@ namespace AIPrompt
                         line += v;
                     }
                 }
-
             }
 
             foreach (var item in list)
@@ -97,8 +97,6 @@ namespace AIPrompt
         private static string GetTime()
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); 
-        }
-
-        
+        }       
     }
 }

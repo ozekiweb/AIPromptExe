@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AIPrompt
 {
-    class Spinner
+    internal class Spinner
     {
         readonly string[] spinnerChars = { "|", "/", "-", "\\" };
         Thread spinnerThread;
@@ -39,14 +39,14 @@ namespace AIPrompt
 
             while (spinnerRunning)
             {
-                Console.Write($"\r{text + " " + spinnerChars[index]} "); // \r brings the cursor back to the start of the line
+                Console.Write($"\r{text + " " + spinnerChars[index]} "); 
                 index = (index + 1) % spinnerChars.Length;
-                Thread.Sleep(100); // Adjust speed of spinner here
+                Thread.Sleep(100); // Speed of spinner
             }
 
-            // Clear spinner when done
+            // Clear spinner and text when done
             Console.Write($"\r");
-            for ( int i = 0; i < text.Length + 2; i++)
+            for (int i = 0; i < text.Length + 2; i++)
             {
                 Console.Write($" ");
             }

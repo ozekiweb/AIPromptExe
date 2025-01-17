@@ -19,7 +19,5 @@ namespace AIPrompt
         public required bool Logging;
         public required bool Interactive;
         public required string Prompt;
-
-
     }
 }
