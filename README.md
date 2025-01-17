@@ -26,7 +26,7 @@
 - Prompt Sending: Allows users to send prompts directly to HTTP AI APIs from the command line.
 - Dual API Support: Supports Ozeki 10 HTTP API and OpenAI API.
 - Configurable: Easy to set your preferences via command-line arguments and environment variables.
-- Flexible: Read prompts from Standard I/O, send a simple prompt or customize your request using JSON
+- Flexible: Read prompts from Standard I/O, send a simple prompt or customize your request using JSON, use HTTP and HTTPS as well
 - Logging Mode: Provides detailed logging to facilitate debugging and monitoring.
 - Interactive Mode: Chat with an LLM by sending multiple prompts through HTTP
 - Fast deployment: Ready to use, self-contained executable file is available to download. 
@@ -77,26 +77,26 @@ You can also pipe the prompt from standard I/O:
 ```bash
 echo "your prompt" | AIPrompt [options]
 ```
+
 For more examples check out this [guide](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html).
 
 ## Examples
 
 ### Send basic prompt with HTTP User Authentication:
 ```bash
-aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model AI -l
+aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model GGUF_Model_1 -l
 ```
-### Send JSON prompt with API Key Authentication using standard I/O:
+### Send JSON prompt with API Key Authentication using standard I/O and logging mode:
 ```bash
 echo "json_prompt" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
 ```
-### Read JSON prompt from file with API Key Authentication using standard I/O:
+### Read JSON prompt from file with API Key Authentication using standard I/O and logging mode:
 ```bash
 type prompt.json | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
 ```
-
 ### Chat with an AI Model by using Interactive Mode and HTTP User Authentication:
 ```bash
-aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model AI -i
+aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model GGUF_Model_1 -i
 ```
                                           
 
@@ -104,32 +104,32 @@ aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u user
 
 The app supports the following command-line arguments:
 
-| Argument                     | Description                                     | Default Value                                   |
-|------------------------------|-------------------------------------------------|------------------------------------------------|
-| `<prompt>`                   | The prompt to be sent to the HTTP AI API.      | (none)                                         |
-| `-h <url>`            | Specifies the URL of the server.               | `http://localhost:9511/api?command=chatgpt`|
-| `-u <username>` | Specifies the username.                        | (none)                                        |
-| `-p <password>`  | Specifies the password.                        | (none)                                       |
-| `-a <apikey>`      | Specifies the API key.                         | (none)                                         |
-| `-j`             | Specifies if the prompt is in JSON format      | `False`                                         |
-| `-m <model>`            | Specifies the model name.                      | `AI`                                           |
-| `-l`              | Enables logging mode.                          | `False`                                        |
-| `-i` | Enables interactive mode. | `False` |
-| `-v`                  | Displays version information.                  | (none)                                         |
-| `-?`             | Displays help and usage information.           | (none)                                         |
+| Argument                      | Description                                   | Default Value                                 |
+|-------------------------------|-----------------------------------------------|-----------------------------------------------|
+| `<prompt>`                    | The prompt to be sent to the HTTP AI API.     | (none)                                        |
+| `-h <url>`                    | Specifies the URL of the server.              | `http://localhost:9511/api?command=chatgpt`   |
+| `-u <username>`               | Specifies the username.                       | (none)                                        |
+| `-p <password>`               | Specifies the password.                       | (none)                                        |
+| `-a <apikey>`                 | Specifies the API key.                        | (none)                                        |
+| `-j`                          | Specifies if the prompt is in JSON format     | `False`                                       |
+| `-m <model>`                  | Specifies the model name.                     | `GGUF_Model_1`                                |
+| `-l`                          | Enables logging mode.                         | `False`                                       |
+| `-i`                          | Enables interactive mode.                     | `False`                                       |
+| `-v`                          | Displays version information.                 | (none)                                        |
+| `-?`                          | Displays help and usage information.          | (none)                                        |
 
 ## Environment Variables
 
 Use environment variables to configure your preferences using the key-values specified below. Environment variables are particularly useful when you need to set configurations that are consistent across multiple runs or systems. For instance, they allow sensitive information, such as API keys or passwords, to be stored securely without hardcoding them into the application or passing them as command-line arguments. The app supports all Environment Variable Scope for Windows. If the same key is specified in multiple scopes, then order of evaluation is *Process, User, and Machine*.
 
-| Key                         | Usage                                          | Accepted Values                                  |
-|------------------------------|-----------------------------------------------|-------------------------------------------------|
-| `OZEKI_AIPROMPT_URL`         | Specifies the URL of the server               | Any valid URL                                    |
-| `OZEKI_AIPROMPT_USERNAME`    | Specifies the username for authentication     | Any valid username                               |
-| `OZEKI_AIPROMPT_PASSWORD`    | Specifies the password for authentication     | Any valid password                               |
-| `OZEKI_AIPROMPT_APIKEY`      | Specifies the API key                         | Any valid API key                                |
-| `OZEKI_AIPROMPT_USE_JSON`    | Specifies if the prompt is in JSON format              | `True`, `False`                                  |
-| `OZEKI_AIPROMPT_MODEL`       | Specifies the model name                      | Any valid model name                             |
+| Key                          | Usage                                          | Accepted Values                    |
+|------------------------------|-----------------------------------------------|------------------------------------|
+| `OZEKI_AIPROMPT_URL`         | Specifies the URL of the server               | URLs with http or https scheme     |
+| `OZEKI_AIPROMPT_USERNAME`    | Specifies the username for authentication     | string                             |
+| `OZEKI_AIPROMPT_PASSWORD`    | Specifies the password for authentication     | string                             |
+| `OZEKI_AIPROMPT_APIKEY`      | Specifies the API key                         | string                             |
+| `OZEKI_AIPROMPT_USE_JSON`    | Specifies if the prompt is in JSON format     | `True`, `False`                    |
+| `OZEKI_AIPROMPT_MODEL`       | Specifies the model name                      | string                             |
 
 
 ## Authentication
