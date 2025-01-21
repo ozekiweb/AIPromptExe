@@ -1,7 +1,13 @@
-![Ozeki AI Server Logo](/Resources/ozeki-ai-server.png)
 # OZEKI AI Prompt 
 
-[OZEKI AI Prompt](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html) is a tool which makes it possible to run AI prompts on the command line, that are evaluated by HTTP AI APIs, such as Ozeki AI Server or Chat GPT.
+OZEKI AI Prompt is a simple, easy to use command line tool that makes it possible to run AI prompts in Windows command shell (cmd.exe), in Windows powershell, in Linux bash or in the Mac shell. It is a single executable file, it does not require any installation procedure. It has no dependencies.
+
+It aiprompt.exe executable can be run from the command line, and the prompt can be passed to it as a command line argument (or through the standard input). The prompt is executed by aiprompt.exe using a http api call to [Ozeki AI Server](https://ozeki.chat) or to ChatGPT (depending on the configuration)
+
+## Project website
+
+This project is sponsored by Ozeki. The project's website can be found at the following link:
+https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html
 
 ## Table of Contents
 
@@ -19,8 +25,12 @@
 ## Introduction
 **Ozeki AI Server** is a powerful software solution for running AI models locally or accessing remote AI services on Windows or Linux. It allows multiple AI models to operate simultaneously on shared hardware, maximizing efficiency and performance. A key feature is its ability to connect AI models to communication channels like **email**, **phone**, and **SMS**, enabling automated responses and streamlined interactions. Unlike subscribing to online AI services, owning your AI system **reduces long-term costs**. Combined with its **privacy**, **scalability**, **reliability**, and **user-friendly interface** Ozeki AI Server is the ultimate tool for leveraging AI in real-world applications while staying budget-friendly.
 
+![Ozeki AI Server Logo](/Resources/ai-prompts-command-line.png)
+
 *More information:* https://ozeki.chat
 *HTTP API:* https://ozeki.chat/p_7097-ai-developer.html
+
+
 ## Features
 
 - Prompt Sending: Allows users to send prompts directly to HTTP AI APIs from the command line.
