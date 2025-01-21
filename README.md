@@ -2,7 +2,7 @@
 
 OZEKI AI Prompt is a simple, easy to use command line tool that makes it possible to run AI prompts in Windows command shell (cmd.exe), in Windows powershell, in Linux bash or in the Mac shell. It is a single executable file, it does not require any installation procedure. It has no dependencies.
 
-It aiprompt.exe executable can be run from the command line, and the prompt can be passed to it as a command line argument (or through the standard input). The prompt is executed by aiprompt.exe using a http api call to [Ozeki AI Server](https://ozeki.chat) or to ChatGPT (depending on the configuration)
+The aiprompt.exe executable can be run from the command line, and the prompt can be passed to it as a command line argument (or through the standard input). The prompt is executed using a http api call to [Ozeki AI Server](https://ozeki.chat) or to ChatGPT (depending on the configuration)
 
 ## Project website
 
