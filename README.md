@@ -94,19 +94,19 @@ For more examples check out this [guide](https://ozeki.chat/p_8675-ai-command-li
 
 ### Send basic prompt with HTTP User Authentication:
 ```bash
-aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model GGUF_Model_1 -l
+aiprompt.exe "basic_prompt" -h http://localhost:9509/api?command=chatgpt -u username -p password -model GGUF_Model_1 -l
 ```
 ### Send JSON prompt with API Key Authentication using standard I/O and logging mode:
 ```bash
-echo "json_prompt" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
+echo "json_prompt" | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -jl
 ```
 ### Read JSON prompt from file with API Key Authentication using standard I/O and logging mode:
 ```bash
-type prompt.json | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl
+type prompt.json | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -jl
 ```
 ### Chat with an AI Model by using Interactive Mode and HTTP User Authentication:
 ```bash
-aiprompt.exe "basic_prompt" -h http://localhost:9511/api?command=chatgpt -u username -p password -model GGUF_Model_1 -i
+aiprompt.exe "basic_prompt" -h http://localhost:9509/api?command=chatgpt -u username -p password -model GGUF_Model_1 -i
 ```
                                           
 
@@ -117,7 +117,7 @@ The app supports the following command-line arguments:
 | Argument                      | Description                                   | Default Value                                 |
 |-------------------------------|-----------------------------------------------|-----------------------------------------------|
 | `<prompt>`                    | The prompt to be sent to the HTTP AI API.     | (none)                                        |
-| `-h <url>`                    | Specifies the URL of the server.              | `http://localhost:9511/api?command=chatgpt`   |
+| `-h <url>`                    | Specifies the URL of the server.              | `http://localhost:9509/api?command=chatgpt`   |
 | `-u <username>`               | Specifies the username.                       | (none)                                        |
 | `-p <password>`               | Specifies the password.                       | (none)                                        |
 | `-a <apikey>`                 | Specifies the API key.                        | (none)                                        |
