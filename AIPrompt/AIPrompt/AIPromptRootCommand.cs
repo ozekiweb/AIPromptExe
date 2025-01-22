@@ -60,7 +60,7 @@ namespace AIPrompt
                     ctx.HelpBuilder.CustomizeSymbol(optPassword, "-p <password>", "specifies the password");
                     ctx.HelpBuilder.CustomizeSymbol(optApikey, "-a <API key>", "specifies the API key");
                     ctx.HelpBuilder.CustomizeSymbol(optJson, "-j", "specifies if JSON format is used [default: false]");
-                    ctx.HelpBuilder.CustomizeSymbol(optModel, "-m <model name>", "specifies model name [default: AI]");
+                    ctx.HelpBuilder.CustomizeSymbol(optModel, "-m <model name>", "specifies model name [default: GGUF_Model_1]");
                     ctx.HelpBuilder.CustomizeSymbol(optLogging, "-l", "enable logging mode");
                     ctx.HelpBuilder.CustomizeSymbol(optInteractive, "-i", "enable interactive mode");
                 })
@@ -83,13 +83,13 @@ namespace AIPrompt
                 .Prepend(_ => _.Output.WriteLine("OZEKI AI Prompt v1.0.0"))
                 .Append(_ => _.Output.WriteLine("Examples:"))
                 .Append(_ => _.Output.WriteLine("  Send basic prompt with HTTP User Authentication:"))
-                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9509/api?command=chatgpt -u arguments.Username -p password -model GGUF_Model_1 -l"))
+                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9509/api?command=chatgpt -u username -p password -m GGUF_Model_1 -l"))
                 .Append(_ => _.Output.WriteLine("  Send JSON prompt with API Key Authentication using standard I/O and logging mode:"))
                 .Append(_ => _.Output.WriteLine(@"  echo ""json_prompt"" | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -jl"))
                 .Append(_ => _.Output.WriteLine("  Read JSON prompt from file with API Key Authentication using standard I/O:"))
-                .Append(_ => _.Output.WriteLine(@"  type prompt.json | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -model AI -jl"))
+                .Append(_ => _.Output.WriteLine(@"  type prompt.json | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -jl"))
                 .Append(_ => _.Output.WriteLine("  Chat with an AI Model by using Interactive Mode and HTTP User Authentication:"))
-                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9509/api?command=chatgpt -u username -p password -model GGUF_Model_1 -i"))
+                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9509/api?command=chatgpt -u username -p password -m GGUF_Model_1 -i"))
                 .Append(_ => _.Output.WriteLine("\nFor more information visit:" + Environment.NewLine + "  https://ozeki.chat/p_8675-ai-prompt.html")));
         }
 
