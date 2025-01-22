@@ -55,7 +55,7 @@ namespace AIPrompt
                 {
                     SetHelpApperence(ctx);
                     ctx.HelpBuilder.CustomizeSymbol(argPrompt, "<prompt>", "the prompt to be sent to the HTTP AI API");
-                    ctx.HelpBuilder.CustomizeSymbol(optURL, "-h <host url>", "specifies the URL of the server [default: http://localhost:9511/api?command=chatgpt]");
+                    ctx.HelpBuilder.CustomizeSymbol(optURL, "-h <host url>", "specifies the URL of the server [default: http://localhost:9509/api?command=chatgpt]");
                     ctx.HelpBuilder.CustomizeSymbol(optUsername, "-u <user name>", "specifies the arguments.Username");
                     ctx.HelpBuilder.CustomizeSymbol(optPassword, "-p <password>", "specifies the password");
                     ctx.HelpBuilder.CustomizeSymbol(optApikey, "-a <API key>", "specifies the API key");
@@ -83,20 +83,20 @@ namespace AIPrompt
                 .Prepend(_ => _.Output.WriteLine("OZEKI AI Prompt v1.0.0"))
                 .Append(_ => _.Output.WriteLine("Examples:"))
                 .Append(_ => _.Output.WriteLine("  Send basic prompt with HTTP User Authentication:"))
-                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9511/api?command=chatgpt -u arguments.Username -p password -model GGUF_Model_1 -l"))
+                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9509/api?command=chatgpt -u arguments.Username -p password -model GGUF_Model_1 -l"))
                 .Append(_ => _.Output.WriteLine("  Send JSON prompt with API Key Authentication using standard I/O and logging mode:"))
-                .Append(_ => _.Output.WriteLine(@"  echo ""json_prompt"" | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -jl"))
+                .Append(_ => _.Output.WriteLine(@"  echo ""json_prompt"" | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -jl"))
                 .Append(_ => _.Output.WriteLine("  Read JSON prompt from file with API Key Authentication using standard I/O:"))
-                .Append(_ => _.Output.WriteLine(@"  type prompt.json | aiprompt.exe -h http://localhost:9511/api?command=chatgpt -a api_key -model AI -jl"))
+                .Append(_ => _.Output.WriteLine(@"  type prompt.json | aiprompt.exe -h http://localhost:9509/api?command=chatgpt -a api_key -model AI -jl"))
                 .Append(_ => _.Output.WriteLine("  Chat with an AI Model by using Interactive Mode and HTTP User Authentication:"))
-                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9511/api?command=chatgpt -u username -p password -model GGUF_Model_1 -i"))
+                .Append(_ => _.Output.WriteLine(@"  aiprompt.exe ""basic_prompt"" -h http://localhost:9509/api?command=chatgpt -u username -p password -model GGUF_Model_1 -i"))
                 .Append(_ => _.Output.WriteLine("\nFor more information visit:" + Environment.NewLine + "  https://ozeki.chat/p_8675-ai-prompt.html")));
         }
 
         private void ParseArguments(InvocationContext context){
             var arguments = new AIPromptArguments()
             {
-                Url = context.ParseResult.GetValueForOption(optURL) ?? EnvironmentVariable.URL ?? "http://localhost:9511/api?command=chatgpt",
+                Url = context.ParseResult.GetValueForOption(optURL) ?? EnvironmentVariable.URL ?? "http://localhost:9509/api?command=chatgpt",
                 Username = context.ParseResult.GetValueForOption(optUsername) ?? EnvironmentVariable.USERNAME,
                 Password = context.ParseResult.GetValueForOption(optPassword) ?? EnvironmentVariable.PASSWORD,
                 Apikey = context.ParseResult.GetValueForOption(optApikey) ?? EnvironmentVariable.APIKEY,
