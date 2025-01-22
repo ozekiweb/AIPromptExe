@@ -18,6 +18,7 @@ https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-pow
 - [Examples](#examples)
 - [Arguments](#arguments)
 - [Environment Variables](#environment-variables)
+- [Guides](#guides)
 - [Contact](#contact)
 - [Authentication](#authentication)
 - [License](#license)
@@ -27,8 +28,9 @@ https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-pow
 
 ![Ozeki AI Server Logo](/Resources/ai-prompts-command-line.png)
 
-*More information:* https://ozeki.chat
-*HTTP API:* https://ozeki.chat/p_7097-ai-developer.html
+**More information:** https://ozeki.chat
+
+**HTTP API:** https://ozeki.chat/p_7097-ai-developer.html
 
 
 ## Features
@@ -46,8 +48,8 @@ https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-pow
 
 ### Option 1: Use the Precompiled Executable (Recommended)
 
-1. Download the precompiled executable from the [Ozeki Website](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html) or the [Releases](https://github.com/ozekiweb/AIPromptExe/releases) page on GitHub.
-2. Extract the downloaded file.
+1. Download the precompiled executable from the [Ozeki Website](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html) or the [Releases](https://github.com/ozekiweb/AIPromptExe/releases) page on GitHub.  
+2. Extract the downloaded file, if you downloaded a compressed executable.
 3. Run the executable directly:
 
 ```bash
@@ -59,7 +61,7 @@ https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-pow
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/username/repository.git
+git clone https://github.com/ozekiweb/AIPromptExe
 ```
 
 2. Navigate to the project directory:
@@ -74,7 +76,12 @@ cd repository
 dotnet build
 ```
 
-## Usage
+To install Ozeki AI Prompt on Linux or MacOS, visit the following pages:
+
+**Linux:** https://ozeki.chat/p_8699-how-to-run-ai-prompts-in-linux-bash-shell.html
+**MacOS:** https://ozeki.chat/p_8701-how-to-run-ai-prompts-in-mac-shell.html
+
+## Usage 
 
 To use the app, provide a prompt and optional configuration parameters:.
 
@@ -88,7 +95,18 @@ You can also pipe the prompt from standard I/O:
 echo "your prompt" | AIPrompt [options]
 ```
 
-For more examples check out this [guide](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html).
+For more examples, look at the guides below. 
+
+## Guides
+For more detailed instructions, check out our dedicated guides on how to use the Ozeki AI Prompt on different operating systems:
+##### How to use Ozeki AI Prompt on Windows:
+https://ozeki.chat/p_8675-ai-prompt.html
+##### How to use Ozeki AI Prompt on Linux:
+https://ozeki.chat/p_8699-how-to-run-ai-prompts-in-linux-bash-shell.html
+##### How to use Ozeki AI Prompt on Mac:
+https://ozeki.chat/p_8701-how-to-run-ai-prompts-in-mac-shell.html
+##### How to generate an Ozeki API Key:
+https://ozeki.chat/p_8698-how-to-create-an-api-key.html
 
 ## Examples
 
@@ -143,26 +161,28 @@ Use environment variables to configure your preferences using the key-values spe
 
 
 ## Authentication
-AIPromptExe supports two types of Authentication
+Ozeki AI Prompt supports two types of Authentication
 | Method | Compatibility |
 |-|-|
-|Using API key |Ozeki and OpenAI|
-|Using HTTP user credentials| Ozeki|
+|Using HTTP user credentials| Ozeki AI Server|
+|Using API key |Ozeki AI Server and OpenAI|
 
-### Method 1: API Key
-
-If you want to connect to the OpenAI API, you can find your API keys [here](https://platform.openai.com/api-keys)
-
-### Method 2: HTTP user credentials
+### Method 1: HTTP user credentials
 To create a HTTP user, open the Chat Gateway and click on the Add application or chatbot link, then install a new HTTP user.
 For more details, check out this [guide](https://ozeki.chat/p_8675-ai-command-line-tool-to-run-ai-prompts-from-cmd-or-powershell.html).
+
+### Method 2: API Key
+To generate you own Ozeki API key, create a HTTP user, then generate an API Key on the Advanced tab.
+For more details, visit this [tutorial](https://ozeki.chat/p_8698-how-to-create-an-api-key.html).
+If you want to connect to the OpenAI API, you can find your API keys [here](https://platform.openai.com/api-keys).
+
 
 ## Contact
 
 For support or questions about the project, please contact:
 
 - **GitHub Issues:** [Open an issue](https://github.com/ozekiweb/AIPromptExe/issues)
-- **Ozeki:** [Contact us](http://in.ozeki.hu:86/p_4597-contact-us-to-get-ozeki-chat-server.html)
+- **Ozeki:** [Contact us](https://ozeki.chat/p_4597-contact-us-to-get-ozeki-chat-server.html)
 
 ## License
 
