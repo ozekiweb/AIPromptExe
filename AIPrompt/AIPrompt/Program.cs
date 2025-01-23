@@ -87,27 +87,36 @@ namespace Ozeki
                 return;
             }
 
-            if (arguments.Logging)
-            {
-                Logger.Debug(response);
-                return;
-            }
-            else if (arguments.Json)
-            {
-                Console.WriteLine(response);
-                return;
-            }
-
-            //Basic prompt
+            AIResponse? aiResponse;
             try
             {
-                var aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
-                AIPromptConsole.PrintMessage(aiResponse.Choices[0].Message);
+                aiResponse = JsonSerializer.Deserialize<AIResponse>(response, AIResponseJsonContext.Default.AIResponse);
             }
             catch (JsonException)
             {
                 Logger.Error("Unexpected response from server:");
                 Logger.Error(response);
+                return;
+            }
+
+            if(aiResponse == null)
+            {
+                Logger.Error("No response from server");
+                return;
+            }
+
+            if (arguments.Logging)
+            {
+                Logger.Debug(response);
+            }
+            else if (arguments.Json)
+            {
+                Console.WriteLine(response);
+            }
+            else
+            {
+                //Basic prompt
+                AIPromptConsole.PrintMessage(aiResponse.Choices[0].Message);
             }
         }
 
