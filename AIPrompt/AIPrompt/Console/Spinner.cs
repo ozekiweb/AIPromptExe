@@ -8,7 +8,6 @@ namespace AIPrompt
 {
     internal class Spinner
     {
-        readonly string[] spinnerChars = { "|", "/", "-", "\\" };
         Thread spinnerThread;
         bool spinnerRunning = true;
         readonly string text;
