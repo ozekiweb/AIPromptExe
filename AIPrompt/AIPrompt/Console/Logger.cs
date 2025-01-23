@@ -52,13 +52,14 @@ namespace AIPrompt
         //Enter padding at the beginning of each line
         private static void PrintMessageWithPadding(string message)
         {
+            const string padding = "  ";
+
             if (message == null)
             {
                 return;
             }
           
-            var splitted = message.Split(Environment.NewLine);
-            const string padding = "  ";
+            var splitted = message.Split(Environment.NewLine);          
             var width = Console.WindowWidth;
             var list = new List<string>
             {
@@ -83,9 +84,10 @@ namespace AIPrompt
                     {
                         list.Add(line);
                         line = padding;
-                        line += v;
+                        line += v;                       
                     }
                 }
+                list.Add(line);
             }
 
             foreach (var item in list)
