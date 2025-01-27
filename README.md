@@ -15,12 +15,13 @@ https://ozeki-ai-server.com/p_8675-ai-command-line-tool-to-run-ai-prompts-from-c
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Guides](#guides)
 - [Examples](#examples)
 - [Arguments](#arguments)
 - [Environment Variables](#environment-variables)
-- [Guides](#guides)
 - [Contact](#contact)
 - [Authentication](#authentication)
+- [Using OpenAI API](#using-openai-api)
 - [License](#license)
 
 ## Introduction
@@ -94,8 +95,6 @@ You can also pipe the prompt from standard I/O:
 ```bash
 echo "your prompt" | AIPrompt [options]
 ```
-
-## Using 
 
 ## Guides
 For more detailed instructions, check out our dedicated guides on how to use the Ozeki AI Prompt on different operating systems:
@@ -188,10 +187,35 @@ The OpenAI Chat Completion API can be accessed through the following endpoint:
 https://api.openai.com/v1/chat/completions
 ```
 
-##### Example configuration:
+### Basic prompt example:
 ```bash
 ::Change YOUR_API_KEY to your OpenAI API key
 aiprompt.exe "Where is Budapest?" -m gpt-4o-mini -h https://api.openai.com/v1/chat/completions -a YOUR_API_KEY
+```
+
+### JSON prompt example:
+```bash
+::Contents of prompt.json
+{
+    "model":"gpt-4o-mini",
+    "messages":[ 
+       {
+          "role":"user",
+          "content":"Where is Budapest?"
+       },
+       {
+         "role":"assistant",
+         "content":"Budapest is the capital city of Hungary, located in Central Europe. It sits on both sides of the Danube River, with Buda on the west bank and Pest on the east. Budapest is known for its stunning architecture, historic sites, and vibrant culture, making it a popular destination for tourists."
+       },
+       {
+         "role":"user",
+         "content":"Tell me the three most visited tourist attraction in Budapest"
+      }
+    ]
+}
+
+::Change the example API key to your OpenAI API key
+type prompt.json | aiprompt.exe -m gpt-4o-mini -h https://api.openai.com/v1/chat/completions -a YOUR_API_KEY
 ```
 
 ## Contact
