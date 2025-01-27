@@ -177,6 +177,23 @@ For more details, visit this [tutorial](https://ozeki.chat/p_8698-how-to-create-
 If you want to connect to the OpenAI API, you can find your API keys [here](https://platform.openai.com/api-keys).
 
 
+## Using OpenAI API
+
+To connect to the OpenAI API, you'll need an OpenAI API key. After logging into the [OpenAI developer platform](https://platform.openai.com), generate an API Key at https://platform.openai.com/api-keys. If you don't have an OpenAI account register one [here](https://platform.openai.com/signup).
+
+**Ozeki AI Prompt** is fully compatible with the OpenAI Chat Completion API, allowing you to use basic prompts, JSON prompts, and interactive mode as well to connect to your favorite OpenAI LLM model.
+
+The OpenAI Chat Completion API can be accessed through the following endpoint:
+```
+https://api.openai.com/v1/chat/completions
+```
+
+##### Example configuration:
+```bash
+::Change YOUR_API_KEY to your OpenAI API key
+aiprompt.exe "Where is Budapest?" -m gpt-4o-mini -h https://api.openai.com/v1/chat/completitions -a YOUR_API_KEY
+```
+
 ## Contact
 
 For support or questions about the project, please contact:
