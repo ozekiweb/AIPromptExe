@@ -2,7 +2,7 @@
 
 OZEKI AI Prompt is a simple, easy to use command line tool that makes it possible to run AI prompts in Windows command shell (cmd.exe), in Windows powershell, in Linux bash or in the Mac shell. It is a single executable file, it does not require any installation procedure. It has no dependencies.
 
-The aiprompt.exe executable can be run from the command line, and the prompt can be passed to it as a command line argument (or through the standard input). The prompt is executed using a http api call to [Ozeki AI Server](https://ozeki-ai-server.com) or to ChatGPT (depending on the configuration)
+The aiprompt.exe executable can be run from the command line, and the prompt can be passed to it as a command line argument (or through the standard input). The prompt is executed using a http api call to [Ozeki AI Server](https://ozeki-ai-server.com) or to ChatGPT, DeepSeek or other OpenAI API compatible providers(depending on the configuration)
 
 ## Project website
 
@@ -21,7 +21,8 @@ https://ozeki-ai-server.com/p_8675-ai-command-line-tool-to-run-ai-prompts-from-c
 - [Environment Variables](#environment-variables)
 - [Contact](#contact)
 - [Authentication](#authentication)
-- [Using OpenAI API](#using-openai-api)
+- [Using OpenAI API / ChatGPT API](#using-openai-api--chatgpt-api)
+- [Using Deepseek](#using-deepseek)
 - [License](#license)
 
 ## Introduction
@@ -37,7 +38,7 @@ https://ozeki-ai-server.com/p_8675-ai-command-line-tool-to-run-ai-prompts-from-c
 ## Features
 
 - Prompt Sending: Allows users to send prompts directly to HTTP AI APIs from the command line.
-- Dual API Support: Supports Ozeki 10 HTTP API and OpenAI API.
+- Multiple API Support: Supports Ozeki 10 HTTP API, OpenAI API, Deepseek and all other OpenAI API compatible providers.
 - Configurable: Easy to set your preferences via command-line arguments and environment variables.
 - Flexible: Read prompts from Standard I/O, send a simple prompt or customize your request using JSON, use HTTP and HTTPS as well
 - Logging Mode: Provides detailed logging to facilitate debugging and monitoring.
@@ -164,7 +165,7 @@ Ozeki AI Prompt supports two types of Authentication
 | Method | Compatibility |
 |-|-|
 |Using HTTP user credentials| Ozeki AI Server|
-|Using API key |Ozeki AI Server and OpenAI|
+|Using API key |Ozeki AI Server, OpenAI, Deepseek, other OpenAI Api compatible providers|
 
 ### Method 1: HTTP user credentials
 To create a HTTP user, open the Chat Gateway and click on the Add application or chatbot link, then install a new HTTP user.
@@ -176,11 +177,11 @@ For more details, visit this [tutorial](https://ozeki-ai-server.com/p_8698-how-t
 If you want to connect to the OpenAI API, you can find your API keys [here](https://platform.openai.com/api-keys).
 
 
-## Using OpenAI API
+## Using OpenAI API / ChatGPT API
 
 To connect to the OpenAI API, you'll need an OpenAI API key. After logging into the [OpenAI developer platform](https://platform.openai.com), generate an API Key at https://platform.openai.com/api-keys. If you don't have an OpenAI account register one [here](https://platform.openai.com/signup).
 
-**Ozeki AI Prompt** is fully compatible with the OpenAI Chat Completion API, allowing you to use basic prompts, JSON prompts, and interactive mode as well to connect to your favorite OpenAI LLM model.
+**Ozeki AI Prompt** is fully compatible with the *OpenAI Chat Completion API*, allowing you to use basic prompts, JSON prompts, and interactive mode as well to connect to your favorite OpenAI LLM model.
 
 The OpenAI Chat Completion API can be accessed through the following endpoint:
 ```
@@ -216,6 +217,48 @@ aiprompt.exe "Where is Budapest?" -m gpt-4o-mini -h https://api.openai.com/v1/ch
 
 ::Change the example API key to your OpenAI API key
 type prompt.json | aiprompt.exe -m gpt-4o-mini -h https://api.openai.com/v1/chat/completions -a YOUR_API_KEY
+```
+
+## Using DeepSeek API
+
+To connect to the Deepseek API, you'll need an DeepSeek API key, which you can generate after registering on the [DeepSeek developer platform](https://platform.deepseek.com).
+
+**Ozeki AI Prompt** is fully compatible with the DeepSeek Chat Completion API, allowing you to use basic prompts, JSON prompts, and interactive mode with the DeepSeek-V3 or DeepSeek-R1 model.
+
+The DeepSeek Chat Completion API can be accessed through the following endpoint:
+```
+https://api.deepseek.com/chat/completions
+```
+
+### Basic prompt example:
+```bash
+::Change YOUR_API_KEY to your DeepSeek API key
+aiprompt.exe "Where is Beijing?" -m deepseek-chat -h https://api.deepseek.com/chat/completions -a YOUR_API_KEY
+```
+
+### JSON prompt example:
+```bash
+::Contents of prompt.json
+{
+    "model":"deepseek-chat",
+    "messages":[ 
+       {
+          "role":"user",
+          "content":"Where is Beijing?"
+       },
+       {
+         "role":"assistant",
+         "content":"Beijing is the capital city of the People's Republic of China. It is located in the northern part of the country, near the northeastern edge of the North China Plain. Beijing is one of the most populous cities in the world and serves as the political, cultural, and educational center of China. The city is surrounded by mountains to the north, northwest, and west, which provide a natural defense and have historically contributed to its strategic importance. Beijing is also known for its rich history, with numerous historical sites such as the Forbidden City, the Great Wall of China, and the Temple of Heaven."
+       },
+       {
+         "role":"user",
+         "content":"Tell me more about the Forbidden City"
+      }
+    ]
+}
+
+::Change the example API key to your Deepseek API key
+type prompt.json | aiprompt.exe -m deepseek-chat -h https://api.deepseek.com/chat/completions -a YOUR_API_KEY
 ```
 
 ## Contact
