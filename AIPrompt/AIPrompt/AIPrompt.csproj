@@ -8,6 +8,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
 	<Version>1.0.1</Version>
   <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+	<RollForward>LatestMajor</RollForward>
   </PropertyGroup>
 
   <ItemGroup>
